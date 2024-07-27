@@ -38,10 +38,11 @@ public class UserReport {
     @CreationTimestamp
     private LocalDateTime reportDateUser;
 
-    private String answerUserReport;
+    @Setter
+    private String answerReportUser;
 
     @UpdateTimestamp
-    private LocalDateTime answerDateUserReport;
+    private LocalDateTime answerDateReportUser;
 
     public UserReport(AuthMember reportee, AuthMember reporter, String reportDescUser, String reportImgUser) {
         this.reportee = reportee;
