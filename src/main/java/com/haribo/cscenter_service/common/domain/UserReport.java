@@ -44,9 +44,9 @@ public class UserReport {
     @UpdateTimestamp
     private LocalDateTime answerDateReportUser;
 
-    public UserReport(AuthMember reportee, AuthMember reporter, String reportDescUser, String reportImgUser) {
-        this.reportee = reportee;
+    public UserReport(AuthMember reporter, AuthMember reportee, String reportDescUser, String reportImgUser) {
         this.reporter = reporter;
+        this.reportee = reportee;
         this.reportDescUser = reportDescUser;
         this.reportImgUser = reportImgUser;
     }
