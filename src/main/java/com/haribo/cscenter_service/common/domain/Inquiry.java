@@ -32,6 +32,7 @@ public class Inquiry {
     @CreationTimestamp
     private LocalDateTime inquiryDate;
 
+    @Setter
     private String answerInquiry;
 
     @UpdateTimestamp

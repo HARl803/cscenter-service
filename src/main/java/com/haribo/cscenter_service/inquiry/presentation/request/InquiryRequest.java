@@ -1,20 +1,20 @@
-package com.haribo.cscenter_service.user.inquiry.presentation.request;
+package com.haribo.cscenter_service.inquiry.presentation.request;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserInquiryRequest {
+public class InquiryRequest {
     private String inquirerId;
     private String inquiryDesc;
     private String inquiryImg;
 
     // Default constructor
-    public UserInquiryRequest() {}
+    public InquiryRequest() {}
 
-    // Constructor for creating a new UserInquiryRequest
-    public UserInquiryRequest(String inquirerId, String inquiryDesc, String inquiryImg) {
+    // Constructor for creating a new InquiryRequest
+    public InquiryRequest(String inquirerId, String inquiryDesc, String inquiryImg) {
         this.inquirerId = inquirerId;
         this.inquiryDesc = inquiryDesc;
         this.inquiryImg = inquiryImg;
