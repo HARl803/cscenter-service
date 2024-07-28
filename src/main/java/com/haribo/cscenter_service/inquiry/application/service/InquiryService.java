@@ -1,9 +1,11 @@
 package com.haribo.cscenter_service.inquiry.application.service;
 
+import com.haribo.cscenter_service.common.domain.AuthMember;
+import com.haribo.cscenter_service.common.service.NotificationMessage;
+import com.haribo.cscenter_service.common.presentation.request.NotificationRequest;
 import com.haribo.cscenter_service.inquiry.application.dto.InquiryDto;
 import com.haribo.cscenter_service.inquiry.domain.repository.AuthMemberRepositoryForInquiry;
 import com.haribo.cscenter_service.inquiry.domain.repository.InquiryRepository;
-import com.haribo.cscenter_service.common.domain.AuthMember;
 import com.haribo.cscenter_service.common.domain.Inquiry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +19,16 @@ import java.util.stream.Collectors;
 public class InquiryService {
 
     private static final Logger log = LoggerFactory.getLogger(InquiryService.class);
-    @Autowired
-    private InquiryRepository inquiryRepository;
 
+    private final InquiryRepository inquiryRepository;
+    private final AuthMemberRepositoryForInquiry authMemberRepositoryForInquiry;
+    private final NotificationMessage notificationMessage;
     @Autowired
-    private AuthMemberRepositoryForInquiry authMemberRepositoryForInquiry;
-
+    public InquiryService(InquiryRepository inquiryRepository, AuthMemberRepositoryForInquiry authMemberRepositoryForInquiry, NotificationMessage notificationMessage) {
+        this.inquiryRepository = inquiryRepository;
+        this.authMemberRepositoryForInquiry = authMemberRepositoryForInquiry;
+        this.notificationMessage = notificationMessage;
+    }
     public InquiryDto getInquiry(String inquiryId) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> new RuntimeException("Inquiry not found"));
@@ -58,6 +64,44 @@ public class InquiryService {
 
         return InquiryDto.fromEntity(inquiry);
     }
+
+//    public Mono<InquiryDto> createInquiry(InquiryDto inquiryDto) {
+//        return Mono.fromSupplier(() -> authMemberRepositoryForInquiry.findById(inquiryDto.getInquirerId())
+//                        .orElseThrow(() -> new RuntimeException("Inquirer not found")))
+//                .flatMap(inquirer -> {
+//                    String generatedId = generatePrimaryKey();
+//                    Inquiry inquiry = new Inquiry(inquirer, inquiryDto.getInquiryDesc(), inquiryDto.getInquiryImg());
+//                    inquiry.setInquiryId(generatedId);
+//                    inquiryRepository.save(inquiry);
+//
+//                    // 관리자에게 알림 전송
+//                    NotificationRequest notificationRequest = new NotificationRequest(
+//                            "adminUserId", // 관리자의 유저 ID로 대체해야 함
+//                            "새로운 문의 사항이 등록되었습니다."
+//                    );
+//                    notificationMessage.sendNotification(notificationRequest);
+//
+//                    return Mono.just(InquiryDto.fromEntity(inquiry));
+//                });
+//    }
+//
+//    public Mono<InquiryDto> updateInquiry(String inquiryId, String answerInquiry) {
+//        return Mono.fromSupplier(() -> inquiryRepository.findById(inquiryId))
+//                .flatMap(optionalInquiry -> {
+//                    Inquiry inquiry = optionalInquiry.orElseThrow(() -> new RuntimeException("Inquiry not found"));
+//                    inquiry.setAnswerInquiry(answerInquiry);
+//                    inquiryRepository.save(inquiry);
+//
+//                    // 유저에게 알림 전송
+//                    NotificationRequest notificationRequest = new NotificationRequest(
+//                            inquiry.getInquirerId(),
+//                            "문의 사항에 대한 답변이 등록되었습니다."
+//                    );
+//                    notificationMessage.sendNotification(notificationRequest);
+//
+//                    return Mono.just(InquiryDto.fromEntity(inquiry));
+//                });
+//    }
 
     private String generatePrimaryKey() {
         String prefix = "INQ";
