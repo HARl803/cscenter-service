@@ -3,6 +3,7 @@ package com.haribo.cscenter_service.inquiry.application.dto;
 import com.haribo.cscenter_service.common.domain.Inquiry;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 

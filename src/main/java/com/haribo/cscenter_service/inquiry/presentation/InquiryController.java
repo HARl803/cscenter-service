@@ -1,13 +1,14 @@
 package com.haribo.cscenter_service.inquiry.presentation;
 
+import com.haribo.cscenter_service.common.service.S3Service;
 import com.haribo.cscenter_service.inquiry.application.dto.InquiryDto;
 import com.haribo.cscenter_service.inquiry.application.service.InquiryService;
-import com.haribo.cscenter_service.inquiry.presentation.request.InquiryRequest;
 import com.haribo.cscenter_service.inquiry.presentation.response.InquiryResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,12 +20,21 @@ public class InquiryController {
     @Autowired
     private InquiryService inquiryService;
 
+    @Autowired
+    private S3Service s3Service;
+
     @PostMapping
     public ResponseEntity<InquiryResponse<InquiryDto>> submitReport(
-            @RequestBody InquiryRequest request) {
-        InquiryDto dto = new InquiryDto(request.getInquirerId(), request.getInquiryDesc(), request.getInquiryImg());
+            @RequestParam("inquirerId") String inquirerId,
+            @RequestParam("inquiryDesc") String inquiryDesc,
+            @RequestParam("inquiryImg") MultipartFile inquiryImg) {
+        // S3에 이미지 파일 업로드
+        String imageUrl = s3Service.uploadFile(inquiryImg);
+
+        // InquiryDto 객체 생성
+        InquiryDto dto = new InquiryDto(inquirerId, inquiryDesc, imageUrl);
         InquiryDto savedReport = inquiryService.createInquiry(dto);
-        //예외처리 안됨
+
         return ResponseEntity.ok(InquiryResponse.success(savedReport));
     }
 
