@@ -36,14 +36,15 @@ public class ContentReport {
     @CreationTimestamp
     private LocalDateTime reportDateContent;
 
-    private String answerContentReport;
+    @Setter
+    private String answerReportContent;
 
     @UpdateTimestamp
-    private LocalDateTime answerDateContentReport;
+    private LocalDateTime answerDateReportContent;
 
-    public ContentReport(AuthMember reportee, AuthMember reporter, String originalIdContent) {
-        this.reportee = reportee;
+    public ContentReport(AuthMember reporter, AuthMember reportee, String originalIdContent) {
         this.reporter = reporter;
+        this.reportee = reportee;
         this.originalIdContent = originalIdContent;
     }
 

@@ -1,20 +1,20 @@
-package com.haribo.cscenter_service.user.reportcontent.presentation.request;
+package com.haribo.cscenter_service.reportcontent.presentation.request;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserReportContentRequest {
+public class ReportContentRequest {
     private String reporterIdContent;
     private String reporteeIdContent;
     private String originalIdContent;
 
     // Default constructor
-    public UserReportContentRequest() {}
+    public ReportContentRequest() {}
 
-    // Constructor for creating a new UserReportContentRequest
-    public UserReportContentRequest(String reporterIdContent, String reporteeIdContent, String originalIdContent) {
+    // Constructor for creating a new ReportContentRequest
+    public ReportContentRequest(String reporterIdContent, String reporteeIdContent, String originalIdContent) {
         this.reporterIdContent = reporterIdContent;
         this.reporteeIdContent = reporteeIdContent;
         this.originalIdContent = originalIdContent;
