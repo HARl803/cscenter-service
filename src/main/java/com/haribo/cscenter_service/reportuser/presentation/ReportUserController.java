@@ -1,13 +1,14 @@
 package com.haribo.cscenter_service.reportuser.presentation;
 
+import com.haribo.cscenter_service.common.service.S3Service;
 import com.haribo.cscenter_service.reportuser.application.dto.ReportUserDto;
 import com.haribo.cscenter_service.reportuser.application.service.ReportUserService;
-import com.haribo.cscenter_service.reportuser.presentation.request.ReportUserRequest;
 import com.haribo.cscenter_service.reportuser.presentation.response.ReportUserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,11 +20,22 @@ public class ReportUserController {
     @Autowired
     private ReportUserService reportUserService;
 
+    @Autowired
+    private S3Service s3Service;
+
     @PostMapping
     public ResponseEntity<ReportUserResponse<ReportUserDto>> submitReport(
-            @RequestBody ReportUserRequest request) {
-        ReportUserDto dto = new ReportUserDto(request.getReporterIdUser(), request.getReporteeIdUser(), request.getReportDescUser(), request.getReportImgUser());
+            @RequestParam("reporterIdUser") String reporterIdUser,
+            @RequestParam("reporteeIdUser") String reporteeIdUser,
+            @RequestParam("reportDescUser") String reportDescUser,
+            @RequestParam("reportImgUser") MultipartFile reportImgUser) {
+        // S3에 이미지 파일 업로드
+        String imageUrl = s3Service.uploadFile(reportImgUser);
+
+        // InquiryDto 객체 생성
+        ReportUserDto dto = new ReportUserDto(reporterIdUser, reporteeIdUser, reportDescUser, imageUrl);
         ReportUserDto savedReport = reportUserService.createReport(dto);
+
         //예외처리 안됨
         return ResponseEntity.ok(ReportUserResponse.success(savedReport));
     }
