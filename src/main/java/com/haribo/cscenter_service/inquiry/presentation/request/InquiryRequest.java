@@ -9,15 +9,15 @@ import org.springframework.web.multipart.MultipartFile;
 public class InquiryRequest {
     private String inquirerId;
     private String inquiryDesc;
-    private MultipartFile inquiryImg;
+//    private String inquiryImg;
 
     // Default constructor
     public InquiryRequest() {}
 
     // Constructor for creating a new InquiryRequest
-    public InquiryRequest(String inquirerId, String inquiryDesc, MultipartFile inquiryImg) {
+    public InquiryRequest(String inquirerId, String inquiryDesc) {
         this.inquirerId = inquirerId;
         this.inquiryDesc = inquiryDesc;
-        this.inquiryImg = inquiryImg;
+//        this.inquiryImg = inquiryImg;
     }
 }

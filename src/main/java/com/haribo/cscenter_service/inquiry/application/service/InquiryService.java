@@ -23,12 +23,14 @@ public class InquiryService {
     private final InquiryRepository inquiryRepository;
     private final AuthMemberRepositoryForInquiry authMemberRepositoryForInquiry;
     private final NotificationMessage notificationMessage;
+
     @Autowired
     public InquiryService(InquiryRepository inquiryRepository, AuthMemberRepositoryForInquiry authMemberRepositoryForInquiry, NotificationMessage notificationMessage) {
         this.inquiryRepository = inquiryRepository;
         this.authMemberRepositoryForInquiry = authMemberRepositoryForInquiry;
         this.notificationMessage = notificationMessage;
     }
+
     public InquiryDto getInquiry(String inquiryId) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> new RuntimeException("Inquiry not found"));
@@ -52,6 +54,13 @@ public class InquiryService {
         inquiry.setInquiryId(generatedId);
         inquiryRepository.save(inquiry);
 
+        // 관리자에게 알림 전송
+        NotificationRequest notificationRequest = new NotificationRequest(
+                "adminUserId", // 관리자의 유저 ID로 대체해야 함
+                "새로운 문의 사항이 등록되었습니다."
+        );
+        notificationMessage.sendNotification(notificationRequest);
+
         return InquiryDto.fromEntity(inquiry);
     }
 
@@ -62,46 +71,15 @@ public class InquiryService {
         inquiry.setAnswerInquiry(answerInquiry);
         inquiryRepository.save(inquiry);
 
+        // 유저에게 알림 전송
+        NotificationRequest notificationRequest = new NotificationRequest(
+                inquiry.getInquirer().getMemberId(),
+                "문의 사항에 대한 답변이 등록되었습니다. 마이페이지에서 확인하세요."
+        );
+        notificationMessage.sendNotification(notificationRequest);
+
         return InquiryDto.fromEntity(inquiry);
     }
-
-//    public Mono<InquiryDto> createInquiry(InquiryDto inquiryDto) {
-//        return Mono.fromSupplier(() -> authMemberRepositoryForInquiry.findById(inquiryDto.getInquirerId())
-//                        .orElseThrow(() -> new RuntimeException("Inquirer not found")))
-//                .flatMap(inquirer -> {
-//                    String generatedId = generatePrimaryKey();
-//                    Inquiry inquiry = new Inquiry(inquirer, inquiryDto.getInquiryDesc(), inquiryDto.getInquiryImg());
-//                    inquiry.setInquiryId(generatedId);
-//                    inquiryRepository.save(inquiry);
-//
-//                    // 관리자에게 알림 전송
-//                    NotificationRequest notificationRequest = new NotificationRequest(
-//                            "adminUserId", // 관리자의 유저 ID로 대체해야 함
-//                            "새로운 문의 사항이 등록되었습니다."
-//                    );
-//                    notificationMessage.sendNotification(notificationRequest);
-//
-//                    return Mono.just(InquiryDto.fromEntity(inquiry));
-//                });
-//    }
-//
-//    public Mono<InquiryDto> updateInquiry(String inquiryId, String answerInquiry) {
-//        return Mono.fromSupplier(() -> inquiryRepository.findById(inquiryId))
-//                .flatMap(optionalInquiry -> {
-//                    Inquiry inquiry = optionalInquiry.orElseThrow(() -> new RuntimeException("Inquiry not found"));
-//                    inquiry.setAnswerInquiry(answerInquiry);
-//                    inquiryRepository.save(inquiry);
-//
-//                    // 유저에게 알림 전송
-//                    NotificationRequest notificationRequest = new NotificationRequest(
-//                            inquiry.getInquirerId(),
-//                            "문의 사항에 대한 답변이 등록되었습니다."
-//                    );
-//                    notificationMessage.sendNotification(notificationRequest);
-//
-//                    return Mono.just(InquiryDto.fromEntity(inquiry));
-//                });
-//    }
 
     private String generatePrimaryKey() {
         String prefix = "INQ";
