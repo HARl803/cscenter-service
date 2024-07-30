@@ -1,8 +1,6 @@
 package com.haribo.cscenter_service.inquiry.application.service;
 
 import com.haribo.cscenter_service.common.domain.AuthMember;
-import com.haribo.cscenter_service.common.service.NotificationMessage;
-import com.haribo.cscenter_service.common.presentation.request.NotificationRequest;
 import com.haribo.cscenter_service.inquiry.application.dto.InquiryDto;
 import com.haribo.cscenter_service.inquiry.domain.repository.AuthMemberRepositoryForInquiry;
 import com.haribo.cscenter_service.inquiry.domain.repository.InquiryRepository;
@@ -22,13 +20,11 @@ public class InquiryService {
 
     private final InquiryRepository inquiryRepository;
     private final AuthMemberRepositoryForInquiry authMemberRepositoryForInquiry;
-    private final NotificationMessage notificationMessage;
 
     @Autowired
-    public InquiryService(InquiryRepository inquiryRepository, AuthMemberRepositoryForInquiry authMemberRepositoryForInquiry, NotificationMessage notificationMessage) {
+    public InquiryService(InquiryRepository inquiryRepository, AuthMemberRepositoryForInquiry authMemberRepositoryForInquiry) {
         this.inquiryRepository = inquiryRepository;
         this.authMemberRepositoryForInquiry = authMemberRepositoryForInquiry;
-        this.notificationMessage = notificationMessage;
     }
 
     public InquiryDto getInquiry(String inquiryId) {
@@ -54,13 +50,6 @@ public class InquiryService {
         inquiry.setInquiryId(generatedId);
         inquiryRepository.save(inquiry);
 
-        // 관리자에게 알림 전송
-        NotificationRequest notificationRequest = new NotificationRequest(
-                "adminUserId", // 관리자의 유저 ID로 대체해야 함
-                "새로운 문의 사항이 등록되었습니다."
-        );
-        notificationMessage.sendNotification(notificationRequest);
-
         return InquiryDto.fromEntity(inquiry);
     }
 
@@ -70,13 +59,6 @@ public class InquiryService {
 
         inquiry.setAnswerInquiry(answerInquiry);
         inquiryRepository.save(inquiry);
-
-        // 유저에게 알림 전송
-        NotificationRequest notificationRequest = new NotificationRequest(
-                inquiry.getInquirer().getMemberId(),
-                "문의 사항에 대한 답변이 등록되었습니다. 마이페이지에서 확인하세요."
-        );
-        notificationMessage.sendNotification(notificationRequest);
 
         return InquiryDto.fromEntity(inquiry);
     }
