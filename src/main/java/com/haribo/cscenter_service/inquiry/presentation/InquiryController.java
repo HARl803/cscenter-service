@@ -30,9 +30,6 @@ public class InquiryController {
     public ResponseEntity<InquiryResponse<InquiryDto>> submitInquiry(
             @RequestPart InquiryRequest inquiryRequest,
             @RequestPart(value = "file", required = false) MultipartFile file) {
-        log.info("getInquirerId:{}", inquiryRequest.getInquirerId());
-        log.info("getInquiryDesc:{}", inquiryRequest.getInquiryDesc());
-        log.info("file:{}", file);
         // S3에 이미지 파일 업로드
         String imageUrl = null;
         if (file != null && !file.isEmpty()) {
