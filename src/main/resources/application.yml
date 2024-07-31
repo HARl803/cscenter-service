@@ -1,0 +1,30 @@
+spring:
+  cloud:
+    aws:
+      credentials:
+        accessKey: AKIAQE43KMM5CDQ4S5W5
+        secretKey: 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
+      region:
+        static: us-east-1
+      s3:
+        bucket: cscenter-service
+  application:
+    name: cscenter-service
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/cscenter?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: ssafy
+    password: ssafy
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: 8081
+

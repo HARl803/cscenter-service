@@ -6,7 +6,6 @@ import com.haribo.cscenter_service.reportuser.application.dto.ReportUserDto;
 import com.haribo.cscenter_service.reportuser.application.service.ReportUserService;
 import com.haribo.cscenter_service.reportuser.presentation.request.ReportUserRequest;
 import com.haribo.cscenter_service.reportuser.presentation.response.ReportUserResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/cscenter/report-user")
 public class ReportUserController {
@@ -56,12 +54,6 @@ public class ReportUserController {
         ResponseEntity<Void> response = restTemplate.postForEntity(
                 "http://localhost:8082/api/v1/notification", notificationRequest, Void.class);
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            log.info("Notification successfully sent");
-        } else {
-            log.error("Failed to send notification");
-        }
-
         return ResponseEntity.ok(ReportUserResponse.success(savedReport));
     }
 
@@ -83,18 +75,11 @@ public class ReportUserController {
                 notificationRequest,
                 Void.class);
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            log.info("Notification successfully sent");
-        } else {
-            log.error("Failed to send notification");
-        }
-
         return ResponseEntity.ok(ReportUserResponse.success(updatedReportUser));    }
 
     @GetMapping("/{reportIdUser}")
     public ResponseEntity<ReportUserResponse<ReportUserDto>> getReport(
             @PathVariable("reportIdUser") String reportIdUser) {
-        log.info("reportIdUser = {}", reportIdUser);
         ReportUserDto dto = reportUserService.getReportUser(reportIdUser);
         return ResponseEntity.ok(ReportUserResponse.success(dto));
     }
