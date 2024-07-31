@@ -19,17 +19,4 @@ public class AuthMember {
     protected AuthMember() {
         // Default constructor for JPA
     }
-//    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL)
-//    private List<ContentReport> reportedContents = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "reportee", cascade = CascadeType.ALL)
-//    private List<ContentReport> receivedReports = new ArrayList<>();
-
-
-//    //Method to add a content report
-//    public void addContentReport(ContentReport contentReport) {
-//        this.contentReports.add(contentReport);
-//        contentReport.setUser(this);
-//    }
 }
-

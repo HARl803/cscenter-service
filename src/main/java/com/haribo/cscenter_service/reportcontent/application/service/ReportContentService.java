@@ -19,11 +19,14 @@ import java.util.stream.Collectors;
 public class ReportContentService {
 
     private static final Logger log = LoggerFactory.getLogger(ReportContentService.class);
-    @Autowired
-    private ReportContentRepository reportContentRepository;
+    private final ReportContentRepository reportContentRepository;
+    private final AuthMemberRepositoryForReportContent authMemberRepositoryForReportContent;
 
     @Autowired
-    private AuthMemberRepositoryForReportContent authMemberRepositoryForReportContent;
+    public ReportContentService(ReportContentRepository reportContentRepository, AuthMemberRepositoryForReportContent authMemberRepositoryForReportContent){
+        this.reportContentRepository = reportContentRepository;
+        this.authMemberRepositoryForReportContent = authMemberRepositoryForReportContent;
+    }
 
     public ReportContentDto getReportContent(String reportIdContent) {
         ContentReport contentReport = reportContentRepository.findById(reportIdContent)
