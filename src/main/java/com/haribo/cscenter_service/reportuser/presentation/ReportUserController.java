@@ -1,13 +1,16 @@
 package com.haribo.cscenter_service.reportuser.presentation;
 
+import com.haribo.cscenter_service.common.presentation.request.NotificationRequest;
 import com.haribo.cscenter_service.common.service.S3Service;
 import com.haribo.cscenter_service.reportuser.application.dto.ReportUserDto;
 import com.haribo.cscenter_service.reportuser.application.service.ReportUserService;
+import com.haribo.cscenter_service.reportuser.presentation.request.ReportUserRequest;
 import com.haribo.cscenter_service.reportuser.presentation.response.ReportUserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -17,26 +20,48 @@ import java.util.List;
 @RequestMapping("/api/v1/cscenter/report-user")
 public class ReportUserController {
 
-    @Autowired
-    private ReportUserService reportUserService;
+    private final ReportUserService reportUserService;
+    private final S3Service s3Service;
 
     @Autowired
-    private S3Service s3Service;
+    public ReportUserController(ReportUserService reportUserService, S3Service s3Service) {
+        this.reportUserService = reportUserService;
+        this.s3Service = s3Service;
+    }
 
     @PostMapping
     public ResponseEntity<ReportUserResponse<ReportUserDto>> submitReport(
-            @RequestParam("reporterIdUser") String reporterIdUser,
-            @RequestParam("reporteeIdUser") String reporteeIdUser,
-            @RequestParam("reportDescUser") String reportDescUser,
-            @RequestParam("reportImgUser") MultipartFile reportImgUser) {
+            @RequestPart ReportUserRequest reportUserRequest,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
         // S3에 이미지 파일 업로드
-        String imageUrl = s3Service.uploadFile(reportImgUser);
+        String imageUrl = null;
+        if (file != null && !file.isEmpty()) {
+            imageUrl = s3Service.uploadFile(file);
+        }
 
-        // InquiryDto 객체 생성
-        ReportUserDto dto = new ReportUserDto(reporterIdUser, reporteeIdUser, reportDescUser, imageUrl);
+        // ReportUserDto 객체 생성
+        ReportUserDto dto = new ReportUserDto(reportUserRequest.getReporterIdUser(),
+                                              reportUserRequest.getReporteeIdUser(),
+                                              reportUserRequest.getReportDescUser(),
+                                              imageUrl);
         ReportUserDto savedReport = reportUserService.createReport(dto);
 
-        //예외처리 안됨
+        // NotificationRequest 생성
+        NotificationRequest notificationRequest = new NotificationRequest(
+                "member002", //임시 관리자 아이디
+                "새로운 유저 신고 건이 등록되었습니다.");
+
+        // RestTemplate을 사용하여 /api/v1/notification으로 요청 포워딩
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Void> response = restTemplate.postForEntity(
+                "http://localhost:8082/api/v1/notification", notificationRequest, Void.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            log.info("Notification successfully sent");
+        } else {
+            log.error("Failed to send notification");
+        }
+
         return ResponseEntity.ok(ReportUserResponse.success(savedReport));
     }
 
@@ -45,8 +70,26 @@ public class ReportUserController {
             @PathVariable("reportIdUser") String reportId,
             @RequestBody String answerReportUser) {
         ReportUserDto updatedReportUser = reportUserService.updateReport(reportId, answerReportUser);
-        return ResponseEntity.ok(ReportUserResponse.success(updatedReportUser));
-    }
+
+        // NotificationRequest 생성
+        NotificationRequest notificationRequest = new NotificationRequest(
+                updatedReportUser.getReporterIdUser(),
+                "신고하신 사항에 대한 답변이 등록되었습니다. 지금 확인해보세요!");
+
+        // RestTemplate을 사용하여 /api/v1/notification으로 요청 포워딩
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Void> response = restTemplate.postForEntity(
+                "http://localhost:8082/api/v1/notification",
+                notificationRequest,
+                Void.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            log.info("Notification successfully sent");
+        } else {
+            log.error("Failed to send notification");
+        }
+
+        return ResponseEntity.ok(ReportUserResponse.success(updatedReportUser));    }
 
     @GetMapping("/{reportIdUser}")
     public ResponseEntity<ReportUserResponse<ReportUserDto>> getReport(
