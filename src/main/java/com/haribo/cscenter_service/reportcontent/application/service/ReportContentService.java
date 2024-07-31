@@ -5,8 +5,6 @@ import com.haribo.cscenter_service.reportcontent.application.dto.ReportContentDt
 import com.haribo.cscenter_service.reportcontent.domain.repository.AuthMemberRepositoryForReportContent;
 import com.haribo.cscenter_service.reportcontent.domain.repository.ReportContentRepository;
 import com.haribo.cscenter_service.common.domain.AuthMember;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,6 @@ import java.util.stream.Collectors;
 @Service
 public class ReportContentService {
 
-    private static final Logger log = LoggerFactory.getLogger(ReportContentService.class);
     private final ReportContentRepository reportContentRepository;
     private final AuthMemberRepositoryForReportContent authMemberRepositoryForReportContent;
 

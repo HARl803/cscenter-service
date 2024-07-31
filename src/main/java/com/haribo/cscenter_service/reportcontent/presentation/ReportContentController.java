@@ -5,7 +5,6 @@ import com.haribo.cscenter_service.reportcontent.application.dto.ReportContentDt
 import com.haribo.cscenter_service.reportcontent.application.service.ReportContentService;
 import com.haribo.cscenter_service.reportcontent.presentation.request.ReportContentRequest;
 import com.haribo.cscenter_service.reportcontent.presentation.response.ReportContentResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/cscenter/report-content")
 public class ReportContentController {
@@ -41,12 +39,6 @@ public class ReportContentController {
         ResponseEntity<Void> response = restTemplate.postForEntity(
                 "http://localhost:8082/api/v1/notification", notificationRequest, Void.class);
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            log.info("Notification successfully sent");
-        } else {
-            log.error("Failed to send notification");
-        }
-
         return ResponseEntity.ok(ReportContentResponse.success(savedReport));
     }
 
@@ -68,19 +60,12 @@ public class ReportContentController {
                 notificationRequest,
                 Void.class);
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            log.info("Notification successfully sent");
-        } else {
-            log.error("Failed to send notification");
-        }
-
         return ResponseEntity.ok(ReportContentResponse.success(updatedReportContent));
     }
 
     @GetMapping("/{reportIdContent}")
     public ResponseEntity<ReportContentResponse<ReportContentDto>> getReport(
             @PathVariable("reportIdContent") String reportIdContent) {
-        log.info("reportIdContent : {}", reportIdContent);
         ReportContentDto dto = reportContentService.getReportContent(reportIdContent);
         return ResponseEntity.ok(ReportContentResponse.success(dto));
     }
