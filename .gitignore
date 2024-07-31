@@ -18,6 +18,7 @@ bin/
 !**/src/test/**/bin/
 application.properties
 application.yml
+spring-configuration-metadata.json
 
 ### IntelliJ IDEA ###
 .idea
