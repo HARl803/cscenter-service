@@ -6,7 +6,6 @@ import com.haribo.cscenter_service.inquiry.application.dto.InquiryDto;
 import com.haribo.cscenter_service.inquiry.application.service.InquiryService;
 import com.haribo.cscenter_service.inquiry.presentation.request.InquiryRequest;
 import com.haribo.cscenter_service.inquiry.presentation.response.InquiryResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/cscenter/inquiry")
 public class InquiryController {
@@ -50,12 +48,6 @@ public class InquiryController {
         ResponseEntity<Void> response = restTemplate.postForEntity(
                 "http://localhost:8082/api/v1/notification", notificationRequest, Void.class);
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            log.info("Notification successfully sent");
-        } else {
-            log.error("Failed to send notification");
-        }
-
         return ResponseEntity.ok(InquiryResponse.success(savedReport));
     }
 
@@ -78,19 +70,12 @@ public class InquiryController {
                 notificationRequest,
                 Void.class);
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            log.info("Notification successfully sent");
-        } else {
-            log.error("Failed to send notification");
-        }
-
         return ResponseEntity.ok(InquiryResponse.success(updatedInquiry));
     }
 
     @GetMapping("/{inquiryId}")
     public ResponseEntity<InquiryResponse<InquiryDto>> getInquiry(
             @PathVariable("inquiryId") String inquiryId) {
-        log.info("inquiryId = {}", inquiryId);
         InquiryDto dto = inquiryService.getInquiry(inquiryId);
         return ResponseEntity.ok(InquiryResponse.success(dto));
     }
