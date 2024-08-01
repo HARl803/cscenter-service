@@ -8,5 +8,4 @@ public class CscenterServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(CscenterServiceApplication.class, args);
     }
-
 }

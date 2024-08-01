@@ -1,16 +1,16 @@
 package com.haribo.cscenter_service.common.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor // 기본 생성자
 public class ContentReport {
 
     @Id
@@ -18,19 +18,17 @@ public class ContentReport {
     private String reportIdContent;
 
     @Setter
-    @ManyToOne
-    @NonNull
-    @JoinColumn(name = "reporter_id_content")
-    private AuthMember reporter;
+    @NotBlank
+    @Column(name = "reporter_id_content", nullable = false)
+    private String reporterIdContent;
 
     @Setter
-    @ManyToOne
-    @NonNull
-    @JoinColumn(name = "reportee_id_content")
-    private AuthMember reportee;
+    @NotBlank
+    @Column(name = "reportee_id_content", nullable = false)
+    private String reporteeIdContent;
 
     @Column(nullable = false)
-    @NonNull
+    @NotBlank
     private String originalIdContent;
 
     @CreationTimestamp
@@ -42,12 +40,9 @@ public class ContentReport {
     @UpdateTimestamp
     private LocalDateTime answerDateReportContent;
 
-    public ContentReport(AuthMember reporter, AuthMember reportee, String originalIdContent) {
-        this.reporter = reporter;
-        this.reportee = reportee;
+    public ContentReport(String reporterIdContent, String reporteeIdContent, String originalIdContent) {
+        this.reporterIdContent = reporterIdContent;
+        this.reporteeIdContent = reporteeIdContent;
         this.originalIdContent = originalIdContent;
     }
-
-    // Protected no-args constructor for JPA
-    protected ContentReport() {}
 }

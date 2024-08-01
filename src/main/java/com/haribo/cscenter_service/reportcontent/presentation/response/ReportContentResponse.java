@@ -1,26 +1,20 @@
 package com.haribo.cscenter_service.reportcontent.presentation.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReportContentResponse<T> {
 
     private HttpStatus statusCode;
     private String resultMsg;
     private T resultData;
-
-    // Default constructor
-    public ReportContentResponse() {}
-
-    // Constructor for creating a new UserReportContentResponse
-    public ReportContentResponse(HttpStatus statusCode, String resultMsg, T resultData) {
-        this.statusCode = statusCode;
-        this.resultMsg = resultMsg;
-        this.resultData = resultData;
-    }
 
     // Static factory method for success response
     public static <T> ReportContentResponse<T> success(T data) {

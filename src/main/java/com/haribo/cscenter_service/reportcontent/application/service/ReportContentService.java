@@ -2,9 +2,7 @@ package com.haribo.cscenter_service.reportcontent.application.service;
 
 import com.haribo.cscenter_service.common.domain.ContentReport;
 import com.haribo.cscenter_service.reportcontent.application.dto.ReportContentDto;
-import com.haribo.cscenter_service.reportcontent.domain.repository.AuthMemberRepositoryForReportContent;
 import com.haribo.cscenter_service.reportcontent.domain.repository.ReportContentRepository;
-import com.haribo.cscenter_service.common.domain.AuthMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,12 +15,10 @@ import java.util.stream.Collectors;
 public class ReportContentService {
 
     private final ReportContentRepository reportContentRepository;
-    private final AuthMemberRepositoryForReportContent authMemberRepositoryForReportContent;
 
     @Autowired
-    public ReportContentService(ReportContentRepository reportContentRepository, AuthMemberRepositoryForReportContent authMemberRepositoryForReportContent){
+    public ReportContentService(ReportContentRepository reportContentRepository){
         this.reportContentRepository = reportContentRepository;
-        this.authMemberRepositoryForReportContent = authMemberRepositoryForReportContent;
     }
 
     public ReportContentDto getReportContent(String reportIdContent) {
@@ -42,14 +38,10 @@ public class ReportContentService {
         if (reportContentRepository.findByOriginalIdContent(reportContentDto.getOriginalIdContent()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Content already reported");
         }
-        AuthMember reporter = authMemberRepositoryForReportContent.findById(reportContentDto.getReporterIdContent())
-                .orElseThrow(() -> new RuntimeException("Reporter not found"));
-        AuthMember reportee = authMemberRepositoryForReportContent.findById(reportContentDto.getReporteeIdContent())
-                .orElseThrow(() -> new RuntimeException("Reportee not found"));
 
         String generatedId = generatePrimaryKey();
 
-        ContentReport contentReport = new ContentReport(reporter, reportee, reportContentDto.getOriginalIdContent());
+        ContentReport contentReport = new ContentReport(reportContentDto.getReporterIdContent(), reportContentDto.getReporteeIdContent(), reportContentDto.getOriginalIdContent());
         contentReport.setReportIdContent(generatedId);
         reportContentRepository.save(contentReport);
 
