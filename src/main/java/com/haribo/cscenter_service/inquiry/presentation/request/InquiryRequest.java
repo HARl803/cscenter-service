@@ -1,20 +1,15 @@
 package com.haribo.cscenter_service.inquiry.presentation.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class InquiryRequest {
     private String inquirerId;
     private String inquiryDesc;
-
-    // Default constructor
-    public InquiryRequest() {}
-
-    // Constructor for creating a new InquiryRequest
-    public InquiryRequest(String inquirerId, String inquiryDesc) {
-        this.inquirerId = inquirerId;
-        this.inquiryDesc = inquiryDesc;
-    }
 }

@@ -15,12 +15,10 @@ import java.util.stream.Collectors;
 public class InquiryService {
 
     private final InquiryRepository inquiryRepository;
-    private final AuthMemberRepositoryForInquiry authMemberRepositoryForInquiry;
 
     @Autowired
     public InquiryService(InquiryRepository inquiryRepository, AuthMemberRepositoryForInquiry authMemberRepositoryForInquiry) {
         this.inquiryRepository = inquiryRepository;
-        this.authMemberRepositoryForInquiry = authMemberRepositoryForInquiry;
     }
 
     public InquiryDto getInquiry(String inquiryId) {
@@ -37,12 +35,9 @@ public class InquiryService {
     }
 
     public InquiryDto createInquiry(InquiryDto inquiryDto) {
-        AuthMember inquirer = authMemberRepositoryForInquiry.findById(inquiryDto.getInquirerId())
-                .orElseThrow(() -> new RuntimeException("Inquirer not found"));
-
         String generatedId = generatePrimaryKey();
 
-        Inquiry inquiry = new Inquiry(inquirer, inquiryDto.getInquiryDesc(), inquiryDto.getInquiryImg());
+        Inquiry inquiry = new Inquiry(inquiryDto.getInquirerId(), inquiryDto.getInquiryDesc(), inquiryDto.getInquiryImg());
         inquiry.setInquiryId(generatedId);
         inquiryRepository.save(inquiry);
 

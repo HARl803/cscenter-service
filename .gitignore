@@ -19,6 +19,7 @@ bin/
 application.properties
 application.yml
 spring-configuration-metadata.json
+.env
 
 ### IntelliJ IDEA ###
 .idea

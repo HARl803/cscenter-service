@@ -1,13 +1,15 @@
 package com.haribo.cscenter_service.inquiry.application.dto;
 
 import com.haribo.cscenter_service.common.domain.Inquiry;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class InquiryDto {
 
     private String inquirerId;
@@ -17,19 +19,6 @@ public class InquiryDto {
     private String answerInquiry;
     private LocalDateTime answerDateInquiry;
 
-    // Default constructor
-    public InquiryDto() {}
-
-    public InquiryDto(String inquirerId, String inquiryDesc, String inquiryImg,
-                      LocalDateTime inquiryDate, String answerInquiry, LocalDateTime answerDateInquiry) {
-        this.inquirerId = inquirerId;
-        this.inquiryDesc = inquiryDesc;
-        this.inquiryImg = inquiryImg;
-        this.inquiryDate = inquiryDate;
-        this.answerInquiry = answerInquiry;
-        this.answerDateInquiry = answerDateInquiry;
-    }
-
     public InquiryDto(String inquirerId, String inquiryDesc, String inquiryImg) {
         this.inquirerId = inquirerId;
         this.inquiryDesc = inquiryDesc;
@@ -38,7 +27,7 @@ public class InquiryDto {
 
     // Factory method to create a DTO from ContentReport entity
     public static InquiryDto fromEntity(Inquiry inquiry) {
-        return new InquiryDto(inquiry.getInquirer().getMemberId(),
+        return new InquiryDto(inquiry.getInquirer(),
                 inquiry.getInquiryDesc(),
                 inquiry.getInquiryImg(),
                 inquiry.getInquiryDate(),

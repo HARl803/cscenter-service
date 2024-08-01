@@ -1,11 +1,15 @@
 package com.haribo.cscenter_service.common.presentation.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class NotificationRequest {
 
     @JsonProperty("userId")
@@ -13,11 +17,4 @@ public class NotificationRequest {
 
     @JsonProperty("message")
     private String message;
-
-    public NotificationRequest() {}
-
-    public NotificationRequest(String userId, String message) {
-        this.userId = userId;
-        this.message = message;
-    }
 }

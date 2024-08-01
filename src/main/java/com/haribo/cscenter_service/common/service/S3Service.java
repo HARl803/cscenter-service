@@ -15,7 +15,7 @@ public class S3Service {
     @Autowired
     private AmazonS3 amazonS3;
 
-    @Value("${cloud.aws.s3.bucket-name}")
+    @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
 
     public String uploadFile(MultipartFile file) {

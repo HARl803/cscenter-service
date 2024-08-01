@@ -1,7 +1,9 @@
 package com.haribo.cscenter_service.common.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Inquiry {
 
     @Id
@@ -18,13 +21,12 @@ public class Inquiry {
     private String inquiryId;
 
     @Setter
-    @ManyToOne
-    @NonNull
-    @JoinColumn(name = "inquirer_id")
-    private AuthMember inquirer;
+    @NotBlank
+    @Column(name = "inquirer_id", nullable = false)
+    private String inquirer;
 
     @Column(nullable = false)
-    @NonNull
+    @NotBlank
     private String inquiryDesc;
 
     private String inquiryImg;
@@ -38,12 +40,9 @@ public class Inquiry {
     @UpdateTimestamp
     private LocalDateTime answerDateInquiry;
 
-    public Inquiry(AuthMember inquirer, String inquiryDesc, String inquiryImg) {
+    public Inquiry(String inquirer, String inquiryDesc, String inquiryImg) {
         this.inquirer = inquirer;
         this.inquiryDesc = inquiryDesc;
         this.inquiryImg = inquiryImg;
     }
-
-    // Protected no-args constructor for JPA
-    protected Inquiry() {}
 }
