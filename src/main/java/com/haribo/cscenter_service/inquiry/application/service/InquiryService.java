@@ -1,8 +1,6 @@
 package com.haribo.cscenter_service.inquiry.application.service;
 
-import com.haribo.cscenter_service.common.domain.AuthMember;
 import com.haribo.cscenter_service.inquiry.application.dto.InquiryDto;
-import com.haribo.cscenter_service.inquiry.domain.repository.AuthMemberRepositoryForInquiry;
 import com.haribo.cscenter_service.inquiry.domain.repository.InquiryRepository;
 import com.haribo.cscenter_service.common.domain.Inquiry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,7 @@ public class InquiryService {
     private final InquiryRepository inquiryRepository;
 
     @Autowired
-    public InquiryService(InquiryRepository inquiryRepository, AuthMemberRepositoryForInquiry authMemberRepositoryForInquiry) {
+    public InquiryService(InquiryRepository inquiryRepository) {
         this.inquiryRepository = inquiryRepository;
     }
 
